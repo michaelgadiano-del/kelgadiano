@@ -1,25 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback</title>
-</head>
-<body>
+<x-layout title="Feedback">
     <h1>Feedback</h1>
 
-    <form method="POST" action="/feedback">
+    @if ($errors->any())
+        <div style="color: red;">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    @if (session('success'))
+        <p style="color: green;">{{ session('success') }}</p>
+    @endif
+
+    <form method="POST" action="{{ route('feedback.submit') }}">
         @csrf
+
         <label for="message">Message</label>
-        <textarea name="message" id="message" cols="30" rows="5"></textarea>
-        <br>
-        <button type="submit">Send feedback</button>
+        <textarea name="message" id="message" required>{{ old('message') }}</textarea>
+
+        <button type="submit">Send Feedback</button>
     </form>
 
-    <form method="POST" action="/feedback/1">
+    <form method="POST" action="{{ route('feedback.delete', 1) }}">
         @csrf
         @method('DELETE')
-        <button type="submit">Delete feedback 1</button>
+        <button type="submit">Delete Feedback 1</button>
     </form>
-</body>
-</html>
+</x-layout>

@@ -1,32 +1,28 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\StudentController;
-use App\Http\Requests\FeedbackRequest;
-use App\Models\User;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PageController::class, 'home'])->name('home');
 
-// Model binding: implicit binding resolves {user} to a User model by id
-Route::get('/students/{user}', [StudentController::class, 'show'])->name('students.show');
-Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+Route::get('/contact', [PageController::class, 'contact'])
+    ->name('contact.show');
 
-// Parameter constraint example: only numbers allowed for {id}
-Route::get('/items/{id}', function (string $id) {
-    return "Item {$id}";
-})->whereNumber('id');
+Route::get('/items/{id}', [ItemController::class, 'show'])
+    ->whereNumber('id')
+    ->name('items.show');
 
-// Contact view
-Route::view('/contact', 'contact')->name('contact.show');
+Route::get('/feedback', [FeedbackController::class, 'create'])
+    ->name('feedback.form');
 
-// Feedback form (GET) and submission (POST) using a FormRequest for validation
-Route::get('/feedback', function () {
-    return view('feedback');
-})->name('feedback.form');
+Route::post('/feedback', [FeedbackController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('feedback.submit');
 
-Route::post('/feedback', function (FeedbackRequest $request) {
-    $data = $request->validated();
-    return 'Feedback received: ' . ($data['message'] ?? '');
-})->name('feedback.submit');
+Route::delete('/feedback/{id}', [FeedbackController::class, 'destroy'])
+    ->name('feedback.delete');
+
+Route::resource('students', StudentController::class);

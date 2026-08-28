@@ -1,238 +1,440 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Michael Gadiano — IT Expert specializing in network infrastructure, systems administration, and cybersecurity.">
+    <title>Michael Gadiano | IT Expert</title>
+    <style>
+        :root {
+            --bg: #0b1220;
+            --bg-soft: #111a2c;
+            --card: #16223a;
+            --border: #223350;
+            --text: #e6edf7;
+            --muted: #8fa3c0;
+            --accent: #38bdf8;
+            --accent-2: #6366f1;
+            --green: #34d399;
+        }
 
-        <title>{{ config('app.name', 'Sweet Crumbs Bakery') }}</title>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        @fonts
+        html { scroll-behavior: smooth; }
 
-        <!-- Styles / Scripts -->
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @else
-            <style>
-                /*! tailwindcss v4.0.7 | MIT License | https://tailwindcss.com */ @layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-translate-x:0;--tw-translate-y:0;--tw-translate-z:0;--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-space-x-reverse:0;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-tracking:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-blur:initial;--tw-brightness:initial;--tw-contrast:initial;--tw-grayscale:initial;--tw-hue-rotate:initial;--tw-invert:initial;--tw-opacity:initial;--tw-saturate:initial;--tw-sepia:initial;--tw-drop-shadow:initial;--tw-drop-shadow-color:initial;--tw-drop-shadow-alpha:100%;--tw-drop-shadow-size:initial;--tw-duration:initial;--tw-ease:initial;--tw-content:""}}}@layer theme{:root,:host{--font-sans:"Instrument Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";--font-serif:ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;--font-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;--color-red-50:oklch(97.1% .013 17.38);--color-red-100:oklch(93.6% .032 17.717);--color-red-200:oklch(88.5% .062 18.334);--color-red-300:oklch(80.8% .114 19.571);--color-red-400:oklch(70.4% .191 22.216);--color-red-500:oklch(63.7% .237 25.331);--color-red-600:oklch(57.7% .245 27.325);--color-red-700:oklch(50.5% .213 27.518);--color-red-800:oklch(44.4% .
-            </style>
-        @endif
-        <style>
-            .page-shell {
-                min-height: 100vh;
-                background: radial-gradient(circle at top left, rgba(254, 237, 223, 0.92), transparent 22%),
-                    radial-gradient(circle at bottom right, rgba(188, 108, 37, 0.14), transparent 34%),
-                    #fff7f0;
-                color: #382a1f;
-            }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
 
-            .glass-panel {
-                background: rgba(255, 255, 255, 0.86);
-                backdrop-filter: blur(14px);
-                border: 1px solid rgba(255, 255, 255, 0.78);
-                box-shadow: 0 28px 70px rgba(128, 77, 36, 0.12);
-            }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-            .hero-pill {
-                display: inline-flex;
-                align-items: center;
-                padding: 0.75rem 1rem;
-                border-radius: 999px;
-                background: rgba(252, 216, 191, 0.96);
-                letter-spacing: 0.24em;
-                font-size: 0.75rem;
-                font-weight: 700;
-                text-transform: uppercase;
-                color: #9c6f44;
-            }
+        .container { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
 
-            .modern-btn {
-                transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
-            }
+        /* ---------- Nav ---------- */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(11, 18, 32, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.9rem;
+            padding-bottom: 0.9rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+        .logo-badge {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #0b1220;
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
+        .nav-links { display: flex; gap: 1.5rem; font-size: 0.95rem; }
+        .nav-links a { color: var(--muted); }
+        .nav-links a:hover { color: var(--text); text-decoration: none; }
 
-            .modern-btn:hover {
-                transform: translateY(-1px);
-            }
+        /* ---------- Hero ---------- */
+        .hero {
+            padding: 5rem 0 4rem;
+            background:
+                radial-gradient(600px 300px at 85% 10%, rgba(99, 102, 241, 0.18), transparent),
+                radial-gradient(500px 260px at 10% 30%, rgba(56, 189, 248, 0.12), transparent);
+        }
+        .hero .container {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #0b1220;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px var(--border), 0 20px 50px -20px rgba(56, 189, 248, 0.5);
+        }
+        .hero h1 { font-size: 2.8rem; line-height: 1.1; margin-bottom: 0.4rem; }
+        .hero .role { font-size: 1.25rem; color: var(--accent); font-weight: 600; margin-bottom: 1rem; }
+        .hero p.tagline { color: var(--muted); max-width: 56ch; margin-bottom: 1.6rem; }
+        .cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #0b1220;
+        }
+        .btn-ghost { border: 1px solid var(--border); color: var(--text); }
+        .btn:hover { transform: translateY(-2px); text-decoration: none; }
+        .btn-primary:hover { box-shadow: 0 10px 25px -10px rgba(56, 189, 248, 0.6); }
+        .btn-ghost:hover { border-color: var(--accent); }
 
-            .section-card {
-                background: rgba(255, 255, 255, 0.92);
-                border: 1px solid rgba(243, 210, 186, 0.9);
-                box-shadow: 0 24px 50px rgba(128, 77, 36, 0.08);
-                border-radius: 2rem;
-            }
+        /* ---------- Stats strip ---------- */
+        .stats {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-soft);
+        }
+        .stats .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            padding-top: 1.6rem;
+            padding-bottom: 1.6rem;
+            text-align: center;
+        }
+        .stat .num { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+        .stat .lbl { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
 
-            .feature-card {
-                border-radius: 2rem;
-                background: rgba(255, 255, 255, 0.96);
-                border: 1px solid rgba(243, 210, 186, 0.92);
-                box-shadow: 0 20px 45px rgba(128, 77, 36, 0.06);
-            }
+        /* ---------- Sections ---------- */
+        section { padding: 4rem 0; }
+        h2 {
+            font-size: 1.7rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle { color: var(--muted); max-width: 60ch; margin-bottom: 2.5rem; }
 
-            .text-accent {
-                color: #bc6c25;
-            }
+        /* About */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+        .about-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .about-card h3 { margin-bottom: 0.75rem; color: var(--accent); font-size: 1.1rem; }
+        .about-card p, .about-card li { color: var(--muted); }
+        .about-card ul { list-style: none; }
+        .about-card ul li { padding: 0.3rem 0; border-bottom: 1px dashed var(--border); }
+        .about-card ul li:last-child { border-bottom: none; }
+        .about-card ul li strong { color: var(--text); }
 
-            .hero-image-overlay {
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(180deg, transparent, rgba(47, 31, 19, 0.24));
-            }
+        /* Skills */
+        .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem 2rem; }
+        .skill { margin-bottom: 1.1rem; }
+        .skill .top { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-size: 0.95rem; }
+        .skill .top span:last-child { color: var(--muted); }
+        .bar {
+            height: 8px;
+            border-radius: 99px;
+            background: var(--border);
+            overflow: hidden;
+        }
+        .bar > div {
+            height: 100%;
+            border-radius: 99px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        }
 
-            body {
-                font-family: var(--font-sans);
-                margin: 0;
-            }
-        </style>
-    </head>
-    <body class="page-shell">
-        <div class="min-h-screen flex flex-col">
-            <header class="sticky top-0 z-20 mx-auto w-full max-w-7xl px-6 py-5 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between glass-panel">
-                <div class="flex items-center gap-4">
-                    <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-[#f4d2b1] text-2xl font-semibold text-[#7b4e2d] shadow-sm">B</div>
-                    <div>
-                        <p class="text-xs uppercase tracking-[0.36em] text-[#9d7d60]">Sweet Crumbs</p>
-                        <h1 class="text-xl font-semibold text-[#2f1f13]">Bakery & Cafe</h1>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <nav class="hidden gap-8 text-sm font-medium text-[#5a4636] sm:flex">
-                        <a href="#menu" class="transition hover:text-[#c46325]">Menu</a>
-                        <a href="#about" class="transition hover:text-[#c46325]">About</a>
-                        <a href="#contact" class="transition hover:text-[#c46325]">Contact</a>
-                    </nav>
-                    <a href="#contact" class="modern-btn inline-flex items-center justify-center rounded-full bg-[#bc6c25] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#bc6c25]/20 hover:bg-[#a55818]">Order now</a>
-                </div>
-            </header>
+        /* Expertise cards */
+        .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.15s ease, border-color 0.15s ease;
+        }
+        .card:hover { transform: translateY(-4px); border-color: var(--accent); }
+        .card .icon { font-size: 1.6rem; margin-bottom: 0.8rem; }
+        .card h3 { font-size: 1.05rem; margin-bottom: 0.5rem; }
+        .card p { color: var(--muted); font-size: 0.92rem; }
 
-            <main class="flex-1">
-                <section class="relative overflow-hidden">
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(244,186,143,0.35),_transparent_35%)] pointer-events-none"></div>
-                    <div class="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_top_right,_rgba(245,216,181,0.5),_transparent_45%)] pointer-events-none"></div>
-                    <div class="mx-auto w-full max-w-7xl px-6 py-12 lg:py-24 flex flex-col gap-12 lg:flex-row lg:items-center">
-                        <div class="max-w-2xl">
-                            <span class="hero-pill">Fresh every morning</span>
-                            <h2 class="mt-6 text-4xl font-semibold tracking-tight text-[#2f1f13] sm:text-5xl">Sweet breads, warm pastries, and smiles baked daily.</h2>
-                            <p class="mt-6 text-lg leading-8 text-[#5f4a3d]">From flaky croissants to hearty sourdough, our bakery delivers handcrafted treats made with the finest ingredients and a love for every bite.</p>
-                            <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-                                <a href="#contact" class="modern-btn inline-flex items-center justify-center rounded-full bg-[#bc6c25] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-[#bc6c25]/20 hover:bg-[#a55818]">Order today</a>
-                                <a href="#menu" class="modern-btn inline-flex items-center justify-center rounded-full border border-[#bc6c25] bg-white/95 px-8 py-4 text-sm font-semibold text-[#5a3c24] hover:bg-[#fff5eb]">View menu</a>
-                            </div>
-                            <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                                <div class="feature-card p-5">
-                                    <p class="text-2xl font-semibold text-[#bc6c25]">120+</p>
-                                    <p class="mt-1 text-sm text-[#6b5042]">Fresh pastries weekly</p>
-                                </div>
-                                <div class="feature-card p-5">
-                                    <p class="text-2xl font-semibold text-[#bc6c25]">20+</p>
-                                    <p class="mt-1 text-sm text-[#6b5042]">Artisan bread varieties</p>
-                                </div>
-                                <div class="feature-card p-5">
-                                    <p class="text-2xl font-semibold text-[#bc6c25]">4.9/5</p>
-                                    <p class="mt-1 text-sm text-[#6b5042]">Customer rating</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="glass-panel overflow-hidden rounded-[2.5rem] border border-white/80 p-1 shadow-[0_32px_80px_rgba(141,77,33,0.14)]">
-                            <div class="relative overflow-hidden rounded-[2.4rem]">
-                                <img src="https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?auto=format&fit=crop&w=900&q=80" alt="Bakery goods" class="h-[380px] w-full object-cover object-center transition duration-500 hover:scale-105" />
-                                <div class="hero-image-overlay"></div>
-                                <div class="absolute bottom-6 left-6 rounded-full bg-white/90 px-5 py-3 text-sm font-semibold text-[#5a4231] shadow-sm">Today’s bake selection</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        /* Experience timeline */
+        .timeline { border-left: 2px solid var(--border); margin-left: 0.5rem; padding-left: 1.6rem; display: grid; gap: 1.8rem; }
+        .tl-item { position: relative; }
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -1.78rem;
+            top: 0.3rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 3px solid var(--bg);
+        }
+        .tl-item h3 { font-size: 1.05rem; }
+        .tl-item .when { color: var(--accent); font-size: 0.85rem; font-weight: 600; }
+        .tl-item p { color: var(--muted); font-size: 0.95rem; }
 
-                <section id="menu" class="mx-auto w-full max-w-7xl px-6 py-16">
-                    <div class="grid gap-10 lg:grid-cols-[1.25fr_0.9fr] items-center">
-                        <div>
-                            <p class="text-sm uppercase tracking-[0.3em] text-[#b87e4b]">Our favorites</p>
-                            <h3 class="mt-3 text-3xl font-semibold text-[#2f1f13]">Something for every craving.</h3>
-                            <p class="mt-4 max-w-xl text-base leading-8 text-[#5f4a3d]">Try our signature handcrafted items, baked fresh each morning and made with seasonal ingredients and care.</p>
-                        </div>
-                        <div class="grid gap-4 sm:grid-cols-2">
-                            <article class="rounded-[2rem] border border-[#f1d6c0] bg-white p-6 shadow-sm">
-                                <p class="text-sm uppercase tracking-[0.2em] text-[#ba7e45]">Morning</p>
-                                <h4 class="mt-3 text-xl font-semibold text-[#3a2517]">Almond croissant</h4>
-                                <p class="mt-3 text-sm leading-6 text-[#6b5042]">Buttery, flaky layers with toasted almonds and vanilla glaze.</p>
-                            </article>
-                            <article class="rounded-[2rem] border border-[#f1d6c0] bg-white p-6 shadow-sm">
-                                <p class="text-sm uppercase tracking-[0.2em] text-[#ba7e45]">Sourdough</p>
-                                <h4 class="mt-3 text-xl font-semibold text-[#3a2517]">Country loaf</h4>
-                                <p class="mt-3 text-sm leading-6 text-[#6b5042]">Crisp crust, chewy crumb, and a subtle tang from long fermentation.</p>
-                            </article>
-                            <article class="rounded-[2rem] border border-[#f1d6c0] bg-white p-6 shadow-sm">
-                                <p class="text-sm uppercase tracking-[0.2em] text-[#ba7e45]">Sweet</p>
-                                <h4 class="mt-3 text-xl font-semibold text-[#3a2517]">Berry tart</h4>
-                                <p class="mt-3 text-sm leading-6 text-[#6b5042]">Fresh berries, lemon custard, and a crisp pastry shell.</p>
-                            </article>
-                            <article class="rounded-[2rem] border border-[#f1d6c0] bg-white p-6 shadow-sm">
-                                <p class="text-sm uppercase tracking-[0.2em] text-[#ba7e45]">Daily</p>
-                                <h4 class="mt-3 text-xl font-semibold text-[#3a2517]">Coffee cake</h4>
-                                <p class="mt-3 text-sm leading-6 text-[#6b5042]">Warm cinnamon crumb topping with a rich coffee glaze.</p>
-                            </article>
-                        </div>
-                    </div>
-                </section>
+        /* Contact */
+        .contact-card {
+            background: linear-gradient(135deg, var(--card), var(--bg-soft));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .contact-card h3 { font-size: 1.4rem; margin-bottom: 0.3rem; }
+        .contact-card p { color: var(--muted); }
+        .contact-links { display: flex; gap: 1rem; flex-wrap: wrap; }
 
-                <section id="about" class="mx-auto w-full max-w-7xl px-6 py-16">
-                    <div class="rounded-[2.5rem] bg-[#fff4eb] p-10 shadow-sm sm:p-16">
-                        <div class="grid gap-10 lg:grid-cols-[0.9fr_1fr] items-center">
-                            <div>
-                                <p class="text-sm uppercase tracking-[0.3em] text-[#b87e4b]">About the bakery</p>
-                                <h3 class="mt-3 text-3xl font-semibold text-[#2f1f13]">A neighborhood bakery with a warm, welcoming feel.</h3>
-                                <p class="mt-6 text-base leading-8 text-[#5f4a3d]">Established to share good bread and good company, our bakery uses recipes passed down through friends, a wood-fired oven spirit, and fresh local ingredients.</p>
-                                <ul class="mt-8 space-y-4 text-[#5f4a3d]">
-                                    <li class="flex gap-3">
-                                        <span class="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#f8d0b5] text-[#9d5f35]">✓</span>
-                                        <span>Daily small-batch baking with real butter.</span>
-                                    </li>
-                                    <li class="flex gap-3">
-                                        <span class="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#f8d0b5] text-[#9d5f35]">✓</span>
-                                        <span>Seasonal pastries and artisan breads.</span>
-                                    </li>
-                                    <li class="flex gap-3">
-                                        <span class="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#f8d0b5] text-[#9d5f35]">✓</span>
-                                        <span>Pickup, coffee, and custom orders available.</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="grid gap-4 sm:grid-cols-2">
-                                <div class="rounded-[2rem] bg-white p-6 shadow-sm">
-                                    <p class="text-sm uppercase tracking-[0.2em] text-[#ba7e45]">Opening hours</p>
-                                    <p class="mt-4 text-3xl font-semibold text-[#3a2517]">6am - 6pm</p>
-                                    <p class="mt-3 text-sm text-[#6b5042]">Every day, fresh from the oven.</p>
-                                </div>
-                                <div class="rounded-[2rem] bg-white p-6 shadow-sm">
-                                    <p class="text-sm uppercase tracking-[0.2em] text-[#ba7e45]">Location</p>
-                                    <p class="mt-4 text-3xl font-semibold text-[#3a2517]">Main Street</p>
-                                    <p class="mt-3 text-sm text-[#6b5042]">Cherrywood district, downtown.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </main>
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
 
-            <footer id="contact" class="border-t border-[#f1d6c0] bg-white">
-                <div class="mx-auto w-full max-w-7xl px-6 py-12">
-                    <div class="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
-                        <div>
-                            <p class="text-sm uppercase tracking-[0.3em] text-[#b87e4b]">Reach out</p>
-                            <h4 class="mt-3 text-2xl font-semibold text-[#2f1f13]">Pre-order or say hello.</h4>
-                            <p class="mt-4 text-base leading-7 text-[#5f4a3d] max-w-2xl">Call us, send a message, or stop by the bakery to try today�s fresh batches.</p>
-                        </div>
-                        <div class="grid gap-4 sm:grid-cols-2">
-                            <div class="rounded-[2rem] bg-[#fff4eb] p-6 shadow-sm">
-                                <p class="text-sm uppercase tracking-[0.2em] text-[#ba7e45]">Phone</p>
-                                <p class="mt-3 font-semibold text-[#3a2517]">(555) 123-4567</p>
-                            </div>
-                            <div class="rounded-[2rem] bg-[#fff4eb] p-6 shadow-sm">
-                                <p class="text-sm uppercase tracking-[0.2em] text-[#ba7e45]">Email</p>
-                                <p class="mt-3 font-semibold text-[#3a2517]">hello@sweetcrumbs.com</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+        @media (max-width: 760px) {
+            .hero .container { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+            .hero h1 { font-size: 2.1rem; }
+            .stats .container { grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
+            .about-grid, .skills-grid { grid-template-columns: 1fr; }
+            .cards { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container">
+            <a class="logo" href="#">
+                <span class="logo-badge">MG</span>
+                Michael Gadiano
+            </a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#expertise">Expertise</a>
+                <a href="#experience">Experience</a>
+                <a href="#contact">Contact</a>
+            </div>
         </div>
-    </body>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+        <div class="container">
+            <div class="avatar">MG</div>
+            <div>
+                <h1>Michael Gadiano</h1>
+                <div class="role">IT Expert · Systems &amp; Network Specialist</div>
+                <p class="tagline">
+                    I design, build, and secure the technology that keeps organizations running — from
+                    robust network infrastructure and server administration to cybersecurity and cloud
+                    engineering. Let's turn your IT challenges into reliable solutions.
+                </p>
+                <div class="cta">
+                    <a href="#contact" class="btn btn-primary">Get in touch</a>
+                    <a href="#expertise" class="btn btn-ghost">What I do</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="container">
+            <div class="stat"><div class="num">12+</div><div class="lbl">Years in IT</div></div>
+            <div class="stat"><div class="num">80+</div><div class="lbl">Projects delivered</div></div>
+            <div class="stat"><div class="num">10</div><div class="lbl">Certifications</div></div>
+            <div class="stat"><div class="num">99.9%</div><div class="lbl">Uptime achieved</div></div>
+        </div>
+    </div>
+
+    <!-- About -->
+    <section id="about">
+        <div class="container">
+            <h2>About me</h2>
+            <p class="subtitle">
+                A hands-on IT professional focused on infrastructure that is fast, reliable, and secure.
+            </p>
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>Who I am</h3>
+                    <p>
+                        I'm an IT expert with deep experience across systems administration, networking,
+                        and cybersecurity. I have spent my career solving complex technical problems —
+                        building data centers, migrating workloads to the cloud, and hardening networks
+                        against modern threats. I believe great IT should be invisible: it simply works.
+                    </p>
+                </div>
+                <div class="about-card">
+                    <h3>Core capabilities</h3>
+                    <ul>
+                        <li><strong>Network architecture</strong> — LAN/WAN, routing, switching, firewalls</li>
+                        <li><strong>Systems administration</strong> — Windows &amp; Linux server management</li>
+                        <li><strong>Cybersecurity</strong> — audits, hardening, threat response</li>
+                        <li><strong>Cloud engineering</strong> — AWS, Azure, hybrid environments</li>
+                        <li><strong>IT leadership</strong> — strategy, budgeting, team mentoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" style="background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <h2>Technical skills</h2>
+            <p class="subtitle">The tools and technologies I work with every day.</p>
+            <div class="skills-grid">
+                <div class="skill"><div class="top"><span>Network &amp; Infrastructure</span><span>95%</span></div><div class="bar"><div style="width: 95%"></div></div></div>
+                <div class="skill"><div class="top"><span>Systems Administration</span><span>92%</span></div><div class="bar"><div style="width: 92%"></div></div></div>
+                <div class="skill"><div class="top"><span>Cybersecurity</span><span>88%</span></div><div class="bar"><div style="width: 88%"></div></div></div>
+                <div class="skill"><div class="top"><span>Cloud (AWS · Azure)</span><span>85%</span></div><div class="bar"><div style="width: 85%"></div></div></div>
+                <div class="skill"><div class="top"><span>Virtualization (VMware · Proxmox)</span><span>90%</span></div><div class="bar"><div style="width: 90%"></div></div></div>
+                <div class="skill"><div class="top"><span>Scripting &amp; Automation</span><span>82%</span></div><div class="bar"><div style="width: 82%"></div></div></div>
+                <div class="skill"><div class="top"><span>Databases &amp; Backup</span><span>80%</span></div><div class="bar"><div style="width: 80%"></div></div></div>
+                <div class="skill"><div class="top"><span>Help Desk &amp; Support</span><span>96%</span></div><div class="bar"><div style="width: 96%"></div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expertise -->
+    <section id="expertise">
+        <div class="container">
+            <h2>Areas of expertise</h2>
+            <p class="subtitle">How I help businesses get the most out of their technology.</p>
+            <div class="cards">
+                <div class="card">
+                    <div class="icon">🖧</div>
+                    <h3>Network Setup &amp; Optimization</h3>
+                    <p>Planning, deployment, and tuning of office and enterprise networks for maximum speed and reliability.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">🛡️</div>
+                    <h3>Security &amp; Compliance</h3>
+                    <p>Security audits, firewall configuration, endpoint protection, and incident response planning.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">☁️</div>
+                    <h3>Cloud Migration</h3>
+                    <p>Moving on-premises workloads to AWS and Azure with minimal downtime and cost control.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">💾</div>
+                    <h3>Backup &amp; Disaster Recovery</h3>
+                    <p>Automated backup strategies and tested recovery plans so your data survives anything.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">🛠️</div>
+                    <h3>IT Support &amp; Maintenance</h3>
+                    <p>Proactive monitoring, maintenance, and responsive support to keep systems healthy.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">📊</div>
+                    <h3>IT Strategy &amp; Consulting</h3>
+                    <p>Long-term technology roadmaps, budgeting, and vendor management aligned with business goals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience" style="background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <h2>Experience</h2>
+            <p class="subtitle">A few highlights from a career built on solving hard problems.</p>
+            <div class="timeline">
+                <div class="tl-item">
+                    <h3>Senior IT Infrastructure Engineer</h3>
+                    <div class="when">2020 — Present</div>
+                    <p>Lead infrastructure design and operations across multiple sites; cut incident response time by 40% and maintained 99.9% uptime.</p>
+                </div>
+                <div class="tl-item">
+                    <h3>IT Systems Administrator</h3>
+                    <div class="when">2016 — 2020</div>
+                    <p>Managed 200+ servers and endpoints; implemented a company-wide backup and disaster recovery system.</p>
+                </div>
+                <div class="tl-item">
+                    <h3>Network Engineer</h3>
+                    <div class="when">2013 — 2016</div>
+                    <p>Deployed enterprise networking for offices and data centers; upgraded network capacity to support cloud adoption.</p>
+                </div>
+                <div class="tl-item">
+                    <h3>IT Support Specialist</h3>
+                    <div class="when">2011 — 2013</div>
+                    <p>First line of technical support; built the knowledge base that later became the team's onboarding standard.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <div class="container">
+            <h2>Let's build something reliable</h2>
+            <p class="subtitle">
+                Have an IT project or a problem that needs solving? I'd love to hear about it.
+            </p>
+            <div class="contact-card">
+                <div>
+                    <h3>Michael Gadiano</h3>
+                    <p>IT Expert — available for consulting and long-term engagements.</p>
+                </div>
+                <div class="contact-links">
+                    <a href="mailto:michael.gadiano@example.com" class="btn btn-primary">Email me</a>
+                    <a href="#" class="btn btn-ghost">LinkedIn</a>
+                    <a href="#" class="btn btn-ghost">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            © {{ date('Y') }} Michael Gadiano · IT Expert
+        </div>
+    </footer>
+
+</body>
 </html>
