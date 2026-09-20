@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PageController;
@@ -26,3 +27,4 @@ Route::delete('/feedback/{id}', [FeedbackController::class, 'destroy'])
     ->name('feedback.delete');
 
 Route::resource('students', StudentController::class);
+Route::resource('courses', CourseController::class);
