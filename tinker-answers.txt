@@ -1,0 +1,29 @@
+# Task C - Eloquent queries and sample output
+
+# 1. Third-year students in Computer Studies, sorted by last name
+Student::where('year_level', 3)
+    ->whereHas('department', fn ($query) => $query->where('code', 'CCS'))
+    ->orderBy('last_name')
+    ->get(['student_number', 'first_name', 'last_name']);
+
+# Output: Illuminate\\Database\\Eloquent\\Collection containing the matching
+# students, ordered alphabetically by last_name.
+
+# 2. Number of students enrolled in each course
+Course::withCount('students')->orderBy('code')->get(['code', 'title', 'students_count']);
+
+# Output: 8 courses, each with students_count equal to 11 or 12 because
+# 30 students are distributed across 8 courses, 3 enrollments per student.
+
+# 3. Students with at least one grade of 1.00
+Student::whereHas('courses', fn ($query) => $query->where('course_student.grade', 1.00))
+    ->orderBy('last_name')
+    ->get();
+
+# Output: an Eloquent collection containing only students with a 1.00 pivot grade.
+
+# 4. Average grade of student id 1
+Student::findOrFail(1)->courses()->avg('course_student.grade');
+
+# Output: a decimal average for student 1; NULL is ignored by SQL AVG when a
+# seeded enrollment has no grade.
