@@ -2,73 +2,82 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Department;
+use App\Models\Student;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class StudentController extends Controller
 {
     public function index(): View
     {
-        $students = User::all();
+        $students = Student::with('department')->orderBy('last_name')->paginate(10);
 
         return view('students.index', compact('students'));
     }
 
     public function create(): View
     {
-        return view('students.create');
+        return view('students.create', ['departments' => Department::orderBy('name')->get()]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email'],
+            'student_number' => ['required', 'string', 'max:20', 'unique:students'],
+            'first_name' => ['required', 'string', 'max:60'],
+            'last_name' => ['required', 'string', 'max:60'],
+            'email' => ['required', 'email', 'unique:students'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'birth_date' => ['required', 'date'],
+            'year_level' => ['required', 'integer', 'between:1,4'],
+            'department_id' => ['required', 'exists:departments,id'],
         ]);
 
-        User::create([
-            ...$data,
-            'password' => Hash::make(Str::random(32)),
-        ]);
+        Student::create($data);
 
         return redirect()
             ->route('students.index')
             ->with('success', 'Student added successfully.');
     }
 
-    public function show(User $student): View
+    public function show(Student $student): View
     {
-        return view('students.show', ['user' => $student]);
+        $student->load('department', 'courses');
+
+        return view('students.show', compact('student'));
     }
 
-    public function edit(User $student): View
+    public function edit(Student $student): View
     {
-        return view('students.edit', ['user' => $student]);
+        return view('students.edit', [
+            'student' => $student,
+            'departments' => Department::orderBy('name')->get(),
+        ]);
     }
 
-    public function update(Request $request, User $student): RedirectResponse
+    public function update(Request $request, Student $student): RedirectResponse
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'email',
-                'unique:users,email,' . $student->id,
-            ],
+            'student_number' => ['required', 'string', 'max:20', 'unique:students,student_number,'.$student->id],
+            'first_name' => ['required', 'string', 'max:60'],
+            'last_name' => ['required', 'string', 'max:60'],
+            'email' => ['required', 'email', 'unique:students,email,'.$student->id],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'birth_date' => ['required', 'date'],
+            'year_level' => ['required', 'integer', 'between:1,4'],
+            'department_id' => ['required', 'exists:departments,id'],
         ]);
 
         $student->update($data);
 
         return redirect()
-            ->route('students.show', $student)
+            ->route('students.index')
             ->with('success', 'Student updated successfully.');
     }
 
-    public function destroy(User $student): RedirectResponse
+    public function destroy(Student $student): RedirectResponse
     {
         $student->delete();
 
