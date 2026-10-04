@@ -9,7 +9,13 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect()->route('login'))->name('home');
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('employees.index');
+    }
+
+    return redirect()->route('login');
+})->name('home');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCourseRequest;
+use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Course;
+use App\Models\Instructor;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CourseController extends Controller
@@ -22,17 +25,28 @@ class CourseController extends Controller
      */
     public function create(): View
     {
-        return view('courses.create', ['course' => new Course]);
+        return view('courses.create', [
+            'course' => new Course(),
+            'instructors' => Instructor::orderBy('name')->get(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreCourseRequest $request): RedirectResponse
     {
-        Course::create($this->validated($request));
+        $data = $request->validated();
 
-        return redirect()->route('courses.index')->with('success', 'Course added successfully.');
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('courses', 'public');
+        }
+
+        unset($data['image']);
+
+        $course = Course::create($data);
+
+        return redirect()->route('courses.show', $course)->with('status', 'Course created.');
     }
 
     /**
@@ -40,7 +54,7 @@ class CourseController extends Controller
      */
     public function show(Course $course): View
     {
-        $course->load('students');
+        $course->load(['students', 'instructor']);
 
         return view('courses.show', compact('course'));
     }
@@ -50,17 +64,32 @@ class CourseController extends Controller
      */
     public function edit(Course $course): View
     {
-        return view('courses.edit', compact('course'));
+        return view('courses.edit', [
+            'course' => $course,
+            'instructors' => Instructor::orderBy('name')->get(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Course $course): RedirectResponse
+    public function update(UpdateCourseRequest $request, Course $course): RedirectResponse
     {
-        $course->update($this->validated($request, $course));
+        $data = $request->validated();
 
-        return redirect()->route('courses.index')->with('success', 'Course updated successfully.');
+        if ($request->hasFile('image')) {
+            if ($course->image_path) {
+                Storage::disk('public')->delete($course->image_path);
+            }
+
+            $data['image_path'] = $request->file('image')->store('courses', 'public');
+        }
+
+        unset($data['image']);
+
+        $course->update($data);
+
+        return redirect()->route('courses.show', $course)->with('status', 'Course updated.');
     }
 
     /**
@@ -68,19 +97,12 @@ class CourseController extends Controller
      */
     public function destroy(Course $course): RedirectResponse
     {
+        if ($course->image_path) {
+            Storage::disk('public')->delete($course->image_path);
+        }
+
         $course->delete();
 
-        return redirect()->route('courses.index')->with('success', 'Course deleted successfully.');
-    }
-
-    private function validated(Request $request, ?Course $course = null): array
-    {
-        $ignore = $course ? ','.$course->id : '';
-
-        return $request->validate([
-            'code' => ['required', 'string', 'max:12', 'unique:courses,code'.$ignore],
-            'title' => ['required', 'string', 'max:120'],
-            'units' => ['required', 'integer', 'between:1,6'],
-        ]);
+        return redirect()->route('courses.index')->with('status', 'Course deleted.');
     }
 }

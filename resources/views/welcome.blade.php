@@ -255,6 +255,7 @@
                 <a href="#skills">Skills</a>
                 <a href="#expertise">Expertise</a>
                 <a href="#experience">Experience</a>
+                <a href="{{ route('login') }}">Log in</a>
                 <a href="#contact">Contact</a>
             </div>
         </div>

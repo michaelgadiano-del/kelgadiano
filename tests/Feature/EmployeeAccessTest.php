@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Department;
+use App\Models\Employee;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -24,6 +26,29 @@ class EmployeeAccessTest extends TestCase
         $response = $this->get('/employees');
 
         $response->assertOk();
+    }
+
+    public function test_authenticated_users_can_search_employees(): void
+    {
+        $this->actingAs(User::factory()->create());
+        $department = Department::create(['name' => 'Operations', 'code' => 'OPS']);
+        Employee::factory()->create([
+            'employee_number' => 'EMP-SEARCH',
+            'first_name' => 'Alex',
+            'last_name' => 'Rivera',
+            'department_id' => $department->id,
+        ]);
+        Employee::factory()->create([
+            'employee_number' => 'EMP-OTHER',
+            'first_name' => 'Taylor',
+            'last_name' => 'Morgan',
+            'department_id' => $department->id,
+        ]);
+
+        $this->get(route('employees.index', ['search' => 'Alex Rivera']))
+            ->assertOk()
+            ->assertSee('EMP-SEARCH')
+            ->assertDontSee('EMP-OTHER');
     }
 
     public function test_users_can_register_with_a_username_and_access_employees(): void

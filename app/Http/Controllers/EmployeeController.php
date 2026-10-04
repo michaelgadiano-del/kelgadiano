@@ -10,11 +10,36 @@ use Illuminate\View\View;
 
 class EmployeeController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $employees = Employee::with('department')->orderBy('last_name')->paginate(10);
+        $validated = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+        ]);
+        $search = trim($validated['search'] ?? '');
 
-        return view('employees.index', compact('employees'));
+        $employees = Employee::with('department')
+            ->when($search !== '', function ($query) use ($search): void {
+                foreach (preg_split('/\s+/', $search) as $term) {
+                    $query->where(function ($query) use ($term): void {
+                        $pattern = "%{$term}%";
+                        $query->where('employee_number', 'like', $pattern)
+                            ->orWhere('first_name', 'like', $pattern)
+                            ->orWhere('last_name', 'like', $pattern)
+                            ->orWhere('email', 'like', $pattern)
+                            ->orWhere('phone', 'like', $pattern)
+                            ->orWhere('position', 'like', $pattern)
+                            ->orWhere('status', 'like', $pattern)
+                            ->orWhereHas('department', function ($query) use ($pattern): void {
+                                $query->where('name', 'like', $pattern);
+                            });
+                    });
+                }
+            })
+            ->orderBy('last_name')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('employees.index', compact('employees', 'search'));
     }
 
     public function create(): View
