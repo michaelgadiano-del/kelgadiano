@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\StudentController;
+use App\Models\Department;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,12 @@ Route::middleware('guest')->group(function (): void {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+Route::get('/api-playground', function () {
+    return view('api-playground', [
+        'departments' => Department::orderBy('name')->get(),
+    ]);
+})->name('api.playground');
 
 Route::get('/contact', [PageController::class, 'contact'])
     ->name('contact.show');

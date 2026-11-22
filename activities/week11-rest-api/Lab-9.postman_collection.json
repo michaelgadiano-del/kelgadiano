@@ -1,0 +1,420 @@
+{
+  "info": {
+    "_postman_id": "bd34185a-3552-4c09-9805-4814324b4311",
+    "name": "WEBDEV3 Week 11 - Employee REST API",
+    "description": "Token-secured, versioned Employee API. Set email and password, issue a token, then run the requests in order.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Issue token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Token created', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { pm.collectionVariables.set('token', pm.response.json().token); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"device_name\": \"postman\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/tokens",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "tokens"
+          ]
+        }
+      }
+    },
+    {
+      "name": "401 - Employee list without token",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/employees",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "employees"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Missing token is rejected', function () { pm.response.to.have.status(401); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "422 - Invalid employee",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"first_name\": \"Missing required fields\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/employees",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "employees"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Invalid input returns validation errors', function () { pm.response.to.have.status(422); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "200 - List employees",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/employees",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "employees"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Employee list returns 200 and pagination', function () { pm.response.to.have.status(200); pm.expect(pm.response.json()).to.have.property('meta'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "201 - Create employee",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Employee created', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { pm.collectionVariables.set('employeeId', pm.response.json().data.id); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employee_number\": \"EMP-{{$timestamp}}\",\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Rivera\",\n  \"email\": \"api-{{$timestamp}}@example.test\",\n  \"phone\": \"09171234567\",\n  \"position\": \"Developer\",\n  \"hire_date\": \"2024-01-15\",\n  \"salary\": 42000.50,\n  \"status\": \"Active\",\n  \"department_id\": {{departmentId}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/employees",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "employees"
+          ]
+        }
+      }
+    },
+    {
+      "name": "200 - Show employee",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/employees/{{employeeId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "employees",
+            "{{employeeId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Employee details return 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "200 - Update employee",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employee_number\": \"EMP-{{$timestamp}}\",\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Rivera\",\n  \"email\": \"api-{{$timestamp}}@example.test\",\n  \"phone\": \"09171234567\",\n  \"position\": \"Senior Developer\",\n  \"hire_date\": \"2024-01-15\",\n  \"salary\": 45000.00,\n  \"status\": \"Active\",\n  \"department_id\": {{departmentId}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/employees/{{employeeId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "employees",
+            "{{employeeId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Employee updated', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "204 - Delete employee",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/employees/{{employeeId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "employees",
+            "{{employeeId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Employee deleted with no content', function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "204 - Revoke current token",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/tokens/current",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "tokens",
+            "current"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Token revoked', function () { pm.response.to.have.status(204); });",
+              "if (pm.response.code === 204) { pm.collectionVariables.unset('token'); }"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "email",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "employeeId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "departmentId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}

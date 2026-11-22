@@ -8,6 +8,7 @@
             </span>
         </div>
         <div class="site-nav-links">
+            <a href="{{ route('api.playground') }}" class="{{ request()->routeIs('api.playground') ? 'active' : '' }}">API Playground</a>
             @auth
                 <a href="{{ route('employees.index') }}" class="{{ request()->routeIs('employees.*') ? 'active' : '' }}">Employees</a>
                 <a href="{{ route('employees.create') }}">Add Employee</a>
